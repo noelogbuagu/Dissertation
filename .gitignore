@@ -1,3 +1,8 @@
 
 data/prices_paid.csv
 raw_data/prices_paid.csv
+clean_data/flood_areas_data/cleaned_flood_areas_data.dbf
+clean_data/flood_areas_data.csv
+clean_data/flood_areas_data/cleaned_flood_areas_data.cpg
+clean_data/flood_areas_data/cleaned_flood_areas_data.shp
+clean_data/flood_areas_data/cleaned_flood_areas_data.shx
