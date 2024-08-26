@@ -7,3 +7,4 @@ clean_data/flood_areas_data/cleaned_flood_areas_data.cpg
 clean_data/flood_areas_data/cleaned_flood_areas_data.shp
 clean_data/flood_areas_data/cleaned_flood_areas_data.shx
 clean_data/merged_crime_data.csv
+final_model.pkl
