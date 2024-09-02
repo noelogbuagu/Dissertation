@@ -2,6 +2,10 @@ import streamlit as st
 import pandas as pd
 import pickle
 import numpy as np
+import matplotlib.pyplot as plt
+import plotly.express as px
+import plotly.graph_objects as go
+
 
 # Load dataset to define feature ranges
 df = pd.read_csv(
@@ -109,16 +113,41 @@ if submit_button:
     st.write(user_input_df)
     st.write('---')
 
-    st.header('Property Price Prediction')
+    
     try:
         # Load the trained pipeline (preprocessor + model)
         with open("/Users/Blurryface/Documents/GitHub/Dissertation/final_model_pipeline.pkl", "rb") as f:
             model_pipeline = pickle.load(f)
 
+        # Apply the same preprocessing to the input data
+        user_input_preprocessed = model_pipeline.named_steps['preprocessor'].transform(
+            user_input_df)
+
+        st.header('Property Price Prediction')
         # Predict based on user input
-        prediction = model_pipeline.predict(user_input_df)
+        prediction = model_pipeline.named_steps['model'].predict(
+            user_input_preprocessed)
         st.write(f"Predicted Property Price: £{np.exp(prediction[0]):,.2f}")
 
+
+        # Display Feature Importance
+        feature_importances = model_pipeline.named_steps['model'].feature_importances_
+        feature_names = model_pipeline.named_steps['preprocessor'].get_feature_names_out(
+        )
+        importance_df = pd.DataFrame({'Feature': feature_names, 'Importance': feature_importances}).sort_values(
+            by='Importance', ascending=True)
+        top_10_features = importance_df.head(10)
+
+        st.header('Feature Importance')
+
+        # Plot with Plotly for interactivity
+        fig = px.bar(top_10_features, x='Importance', y='Feature',
+                     orientation='h', title='Top 10 Feature Importance')
+        fig.update_layout(xaxis_title='Importance',
+                          yaxis_title='Feature', height=600)
+        st.plotly_chart(fig)
+
+        
     except ValueError as e:
         st.error(f"Error making prediction: {e}")
 
